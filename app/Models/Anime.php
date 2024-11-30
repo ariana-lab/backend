@@ -12,12 +12,7 @@ class Anime extends Model
 
     protected $casts = [
         'genres' => 'array',
-        'start_date' => 'datetime:Y-m-d H:i:s',
+        'start_date' => 'date:Y-m-d',
     ];
-
-    public function setStartDateAttribute($value)
-    {
-    $this->attributes['start_date'] = Carbon::parse($value)->format('Y-m-d H:i:s');
-    }
     
 }

@@ -20,14 +20,12 @@ class AnimeController extends Controller
     
     public function store(Request $request)
     {
-        // Validación y creación del anime
         $validated = $request->validate([
             'studio' => 'required|string|max:255',
             'genres' => 'required|array',
             'hype' => 'required|integer',
             'description' => 'required|string',
             'title' => 'required|string|max:255',
-            'start_date' => 'required|date',
             'image' => 'required|string|max:255',
             'link' => 'nullable|string|max:255',
         ]);
@@ -87,41 +85,34 @@ class AnimeController extends Controller
      * Update the specified anime
      */
     public function update(Request $request, $id)
-    {
-        try {
-            $anime = Anime::findOrFail($id);
+{
+    try {
+        $request->validate([
+            'studio' => 'required|string|max:255',
+            'genres' => 'required|array',
+            'hype' => 'required|integer',
+            'description' => 'required|string',
+            'title' => 'required|string|max:255',
+            'link' => 'nullable|url',
+            'start_date' => 'nullable|date',
+            'image' => 'nullable|url',
+        ]);
 
-            $request->validate([
-                'title' => 'sometimes|required',
-                'start_date' => 'sometimes|required|string',
-                'studio' => 'sometimes|required|string',
-                'genres' => 'sometimes|required|array',
-                'description' => 'sometimes|required|string',
-                'hype' => 'sometimes|required|integer',
-                'image' => 'sometimes|required|string'
+        // Si la fecha es válida, la formateas antes de guardarla
+        if ($request->has('start_date')) {
+            $request->merge([
+                'start_date' => Carbon::parse($request->start_date)->format('Y-m-d')
             ]);
-
-            $title = is_array($request->title) ? $request->title['text'] : $request->title;
-            
-            if ($request->has('start_date')) {
-                $startDate = Carbon::parse($request->start_date)->format('Y-m-d H:i:s');
-                $anime->start_date = $startDate;
-            }
-
-            if ($request->has('title')) $anime->title = $title;
-            if ($request->has('studio')) $anime->studio = $request->studio;
-            if ($request->has('genres')) $anime->genres = json_encode($request->genres);
-            if ($request->has('description')) $anime->description = $request->description;
-            if ($request->has('hype')) $anime->hype = $request->hype;
-            if ($request->has('image')) $anime->image = $request->image;
-
-            $anime->save();
-
-            return response()->json($anime);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], $e instanceof ModelNotFoundException ? 404 : 500);
         }
+
+        $anime = Anime::findOrFail($id);
+        $anime->update($request->all());
+
+        return response()->json($anime);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
 
     /**
      * Remove the specified anime

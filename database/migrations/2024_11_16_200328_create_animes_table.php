@@ -15,7 +15,7 @@ return new class extends Migration
             $table->integer('hype');
             $table->text('description');
             $table->string('title');
-            $table->datetime('start_date');
+            $table->date('start_date')->nullable();
             $table->string('image');
             $table->timestamps();
             $table->string('link')->nullable();

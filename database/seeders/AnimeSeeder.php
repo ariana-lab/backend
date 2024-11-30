@@ -18,7 +18,7 @@ class AnimeSeeder extends Seeder
             DB::table('animes')->insert([
                 'title' => $anime['title']['text'], 
                 'link' => $anime['title']['link'], 
-                'start_date' => Carbon::parse($anime['start_date'])->format('Y-m-d H:i:s'), 
+                'start_date' => Carbon::parse($anime['start_date'])->format('Y-m-d'),
                 'studio' => $anime['studio'],
                 'genres' => json_encode($anime['genres']), 
                 'description' => $anime['description'],
