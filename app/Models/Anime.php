@@ -9,7 +9,6 @@ class Anime extends Model
 {
     protected $table = 'animes';
     protected $fillable = ['studio', 'genres', 'hype', 'description', 'title', 'link', 'start_date', 'image'];
-
     protected $casts = [
         'genres' => 'array',
         'start_date' => 'date:Y-m-d',
