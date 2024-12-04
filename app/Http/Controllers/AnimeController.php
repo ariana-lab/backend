@@ -32,8 +32,6 @@ class AnimeController extends Controller
 
         // Crear un nuevo anime en la base de datos
         $anime = Anime::create($validated);
-
-        // Retornar el anime recién creado
         return response()->json($anime, 201);
     }
 
@@ -44,7 +42,7 @@ class AnimeController extends Controller
     public function importFromJson()
     {
         try {
-            $jsonPath = database_path('data/dataa.json');
+            $jsonPath = database_path('data/data.json');
             $jsonData = json_decode(file_get_contents($jsonPath), true);
 
             foreach ($jsonData as $animeData) {
