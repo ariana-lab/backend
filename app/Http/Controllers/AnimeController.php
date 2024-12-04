@@ -24,7 +24,7 @@ class AnimeController extends Controller
             'hype' => 'required|integer',
             'description' => 'required|string',
             'title' => 'required|string|max:255',
-            'image' => 'required|string|max:255',
+            'image' => 'nullable|string|max:255',
             'link' => 'nullable|string|max:255',
         ]);
 
