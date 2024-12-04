@@ -34,7 +34,7 @@ class AnimeController extends Controller
 
     public function importFromJson()
     {
-        $jsonPath = database_path('data/data.json');
+        $jsonPath = database_path('data/dataa.json');
         $jsonData = json_decode(file_get_contents($jsonPath), true);
 
         foreach ($jsonData as $animeData) {
