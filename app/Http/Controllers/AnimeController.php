@@ -34,28 +34,27 @@ class AnimeController extends Controller
 
     public function importFromJson()
     {
-        $jsonPath = database_path('data/dataa.json');
+        $jsonPath = database_path('data/data.json');
         $jsonData = json_decode(file_get_contents($jsonPath), true);
-
+    
         foreach ($jsonData as $animeData) {
+            
             $title = is_array($animeData['title']) ? $animeData['title']['text'] : $animeData['title'];
-            $startDate = Carbon::parse($animeData['start_date'])->format('Y-m-d H:i:s');
+            $startDate = isset($animeData['start_date']) ? Carbon::parse($animeData['start_date'])->format('Y-m-d H:i:s') : null;
 
             Anime::create([
                 'title' => $title,
                 'start_date' => $startDate,
                 'studio' => $animeData['studio'],
-                'genres' => json_encode($animeData['genres']),
+                'genres' => is_array($animeData['genres']) ? json_encode($animeData['genres']) : $animeData['genres'],
                 'description' => $animeData['description'],
-                'hype' => $animeData['hype'],
-                'image' => $animeData['image']
+                'hype' => $animeData['hype'] ?? 0,
+                'image' => $animeData['image'] ?? null,
             ]);
         }
-
         return response()->json(['message' => 'Animes imported successfully'], 200);
     }
-
-
+    
     public function show($id)
     {
         $anime = Anime::findOrFail($id);
@@ -74,13 +73,7 @@ class AnimeController extends Controller
         'start_date' => 'nullable|date',
         'image' => 'nullable|url',
     ]);
-
-    if ($request->has('start_date')) {
-        $request->merge([
-            'start_date' => Carbon::parse($request->start_date)->format('Y-m-d')
-        ]);
-    }
-
+    
     $anime = Anime::findOrFail($id);
     $anime->update($request->all());
     return response()->json($anime);
